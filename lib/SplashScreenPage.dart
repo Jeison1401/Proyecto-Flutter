@@ -22,7 +22,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       photoSize: 170,
       backgroundColor: Colors.white,
       loaderColor: Colors.amber,
-      loadingText: Text("Encoded by \ J-D-D ", 
+      loadingText: Text("Encoded by \ Jeison-Daniel-Dilan ", 
       style: TextStyle(
         color: Colors.black,
         fontSize: 16.0,
