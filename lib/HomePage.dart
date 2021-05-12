@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_proyect/main.dart';
+import 'package:tflite/tflite.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,10 +15,10 @@ class _HomePageState extends State<HomePage> {
 
   //Define required variables
   bool isWorking = false;
-  String resul = '';
+  String result = '';
 
   initCamera() {
-    cameraController = CameraController(camera[0], ResolutionPreset.medium);
+    cameraController = CameraController(camera[1], ResolutionPreset.veryHigh);
     cameraController.initialize().then((value) {
       if (!mounted) {
         return;
@@ -27,16 +28,52 @@ class _HomePageState extends State<HomePage> {
           if (!isWorking) {
             isWorking = true;
             cameraImage = imageFromStream;
+            runModelOnFrame();
           }
         });
       });
     });
   }
 
+  runModelOnFrame() async {
+    if (cameraImage != null) {
+      var recongnitions = await Tflite.runModelOnFrame(
+          bytesList: cameraImage.planes.map((plane) {
+            return plane.bytes;
+          }).toList(),
+          imageHeight: cameraImage.height,
+          imageWidth: cameraImage.width,
+          imageMean: 127.5,
+          imageStd: 127.5,
+          rotation: 90,
+          numResults: 1,
+          threshold: 0.1,
+          asynch: true);
+
+      result = "";
+
+      recongnitions.forEach((response) {
+        result += response["label"] + "\n";
+      });
+
+      setState(() {
+        //result;
+      });
+
+      isWorking = false;
+    }
+  }
+
+  loadModel() async {
+    await Tflite.loadModel(
+        model: "assets/model.tflite", labels: "assets/labels.txt");
+  }
+
   @override
   void initState() {
     super.initState();
     initCamera();
+    loadModel();
   }
 
   @override
@@ -45,13 +82,13 @@ class _HomePageState extends State<HomePage> {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.amber,
-            title: resul.isEmpty
+            backgroundColor: Colors.blueAccent,
+            title: result.isEmpty
                 ? Text('ENFOQUE EL ROSTRO')
                 : Padding(
                     padding: EdgeInsets.only(top: 30.0),
                     child: Text(
-                      resul,
+                      result,
                       style: TextStyle(fontSize: 25),
                       textAlign: TextAlign.center,
                     ),
@@ -60,14 +97,14 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Container(
             child: (!cameraController.value.isInitialized)
-            ? Container()
-            : Align(
-              alignment: Alignment.center,
-              child: AspectRatio(
-                aspectRatio: cameraController.value.aspectRatio,
-                child: CameraPreview(cameraController),
-              ),
-            ),
+                ? Container()
+                : Align(
+                    alignment: Alignment.center,
+                    child: AspectRatio(
+                      aspectRatio: cameraController.value.aspectRatio,
+                      child: CameraPreview(cameraController),
+                    ),
+                  ),
           ),
           backgroundColor: Colors.black,
         ),
