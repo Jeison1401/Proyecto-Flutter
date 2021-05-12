@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   String result = '';
 
   initCamera() {
-    cameraController = CameraController(camera[1], ResolutionPreset.veryHigh);
+    cameraController = CameraController(camera[0], ResolutionPreset.veryHigh);
     cameraController.initialize().then((value) {
       if (!mounted) {
         return;
