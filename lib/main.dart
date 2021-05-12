@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_proyect/SplashScreenPage.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+
+List<CameraDescription> camera;
+
+Future <void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+
+  camera = await availableCameras();
   runApp(MyApp());
 }
 
