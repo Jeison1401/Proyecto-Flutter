@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_proyect/SplashScreenPage.dart';
+import 'package:flutter_proyect/pages/Login_page.dart';
+import 'package:flutter_proyect/pages/SplashScreenPage.dart';
 import 'package:camera/camera.dart';
-
 
 List<CameraDescription> camera;
 
-Future <void> main() async{
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   camera = await availableCameras();
@@ -18,10 +18,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Detector de mascarilla',
-
       home: SplashScreenPage(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        LoginPage.id: (context) => LoginPage(),
+      },
     );
   }
 }
-

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_proyect/HomePage.dart';
+import 'package:flutter_proyect/pages/HomePage.dart';
+import 'package:flutter_proyect/pages/Login_page.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 class SplashScreenPage extends StatefulWidget {
@@ -14,7 +15,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   Widget build(BuildContext context) {
     return SplashScreen(
       seconds: 5,
-      navigateAfterSeconds: new HomePage(),
+      navigateAfterSeconds: new LoginPage(),
       title:Text("Detector de mascarillas",
       style: TextStyle(
         fontWeight: FontWeight.bold,
